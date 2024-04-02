@@ -1,0 +1,65 @@
+#include <stdio.h>
+
+// Fungsi untuk mencari nilai maksimum dari dua bilangan
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+// Fungsi untuk mencari jumlah maksimum elemen yang dapat diambil dari kedua stack
+int twoStacks(int maxSum, int a[], int m, int b[], int n) {
+    int total = 0, count = 0, maxCount = 0;
+    int i = 0, j = 0;
+
+    // Iterasi untuk mengambil elemen dari kedua stack
+    while (i < m && total + a[i] <= maxSum) {
+        total += a[i++];
+        count++;
+        maxCount = max(maxCount, count);
+    }
+
+    // Iterasi sambil mempertimbangkan elemen dari stack kedua
+    while (j < n && i >= 0) {
+        total += b[j++];
+        count++;
+
+        // Jika total melebihi maxSum, kurangi elemen dari stack pertama
+        while (total > maxSum && i > 0) {
+            i--;
+            total -= a[i];
+            count--;
+        }
+
+        // Perbarui maxCount jika jumlah saat ini lebih besar
+        if (total <= maxSum) {
+            maxCount = max(maxCount, count);
+        }
+    }
+
+    return maxCount;
+}
+
+int main() {
+    int games;
+    scanf("%d", &games);
+
+    for (int g = 0; g < games; g++) {
+        int m, n, maxSum;
+        scanf("%d %d %d", &m, &n, &maxSum);
+        int a[m], b[n];
+
+        // Masukkan elemen stack pertama
+        for (int i = 0; i < m; i++) {
+            scanf("%d", &a[i]);
+        }
+
+        // Masukkan elemen stack kedua
+        for (int i = 0; i < n; i++) {
+            scanf("%d", &b[i]);
+        }
+
+        // Cetak hasil jumlah maksimum elemen yang dapat diambil
+        printf("%d\n", twoStacks(maxSum, a, m, b, n));
+    }
+
+    return 0;
+}
